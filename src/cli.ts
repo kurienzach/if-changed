@@ -12,7 +12,6 @@ import { runIfc } from '.';
 import { parseConfigFile } from './config-parser';
 import { env } from './env';
 
-
 /************************************************
  *                  SCRIPT START
  ************************************************/
@@ -37,7 +36,5 @@ import { env } from './env';
     )
   ).flat();
 
-
   runIfc(files, env.hashMapFile, env.cmd);
 })();
-

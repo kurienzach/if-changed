@@ -47,7 +47,9 @@ const parseConfigFile = async (configFilePath?: string): Promise<IConfig> => {
       config.files = config.files.concat(tsconfig.files);
     }
     if (tsconfig.exclude) {
-      config.files = config.files.concat(tsconfig.exclude.map((path: string) => `!${path}`));
+      config.files = config.files.concat(
+        tsconfig.exclude.map((path: string) => `!${path}`)
+      );
     }
   }
 

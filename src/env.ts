@@ -51,7 +51,4 @@ const parseArgs = () => {
 
 parseArgs();
 
-export {
-  env,
-  IConfig,
-}
+export { env, IConfig };

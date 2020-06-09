@@ -1,7 +1,11 @@
-import { getFileHash, readHashMapFile, writeHashFile, IFileToHashMap } from './hash-generator';
+import {
+  getFileHash,
+  readHashMapFile,
+  writeHashFile,
+  IFileToHashMap,
+} from './hash-generator';
 import { logger } from './logger';
 import { runCmd } from './spawn';
-
 
 /**
  * Check if checksums for files match
@@ -42,11 +46,7 @@ const shouldRun = async (
  * @param prevHashMap - Previous hashMap of files
  * @param cmd - Command to execute if checksums don't mach
  */
-const runIfc = async (
-  files: string[],
-  hashMapFile: string,
-  cmd: string,
-) => {
+const runIfc = async (files: string[], hashMapFile: string, cmd: string) => {
   logger.debug('Files to compute checksum for');
   logger.debug(files);
   logger.debug('Previous checksum');
