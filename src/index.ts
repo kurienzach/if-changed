@@ -53,7 +53,7 @@ const runIfc = async (
 ) => {
   logger = log({ level: opts.logLevel });
   logger.debug('Files to compute checksum for')
-  logger.debug(files));
+  logger.debug(files);
   logger.debug('Previous checksum')
   logger.debug(prevHashMap);
   const needsRun = await shouldRun(files, prevHashMap, opts);
