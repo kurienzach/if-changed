@@ -1,6 +1,6 @@
 {
   "name": "@kurienzach/if-changed",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "if-changed",
   "license": "MIT",
   "repository": "",
@@ -9,7 +9,7 @@
     "email": "kurienzach@gmail.com"
   },
   "bin": {
-    "ifc": "cli.sh"
+    "ifc": "bin/cli.js"
   },
   "files": [
     "lib"
