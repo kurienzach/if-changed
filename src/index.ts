@@ -37,7 +37,9 @@ const shouldRun = async (
   }
 
   return files.some((file): boolean | void => {
-    logger.debug(`Comparing hash map for ${file}, Old: ${prevHashMap[file]} New: ${newHashMap[file]}`);
+    logger.debug(
+      `Comparing hash map for ${file}, Old: ${prevHashMap[file]} New: ${newHashMap[file]}`
+    );
     if (prevHashMap[file] !== newHashMap[file]) {
       return true;
     }
@@ -52,9 +54,9 @@ const runIfc = async (
   opts: ICLIOpts
 ) => {
   logger = log({ level: opts.logLevel });
-  logger.debug('Files to compute checksum for')
+  logger.debug('Files to compute checksum for');
   logger.debug(files);
-  logger.debug('Previous checksum')
+  logger.debug('Previous checksum');
   logger.debug(prevHashMap);
   const needsRun = await shouldRun(files, prevHashMap, opts);
   if (needsRun) {
