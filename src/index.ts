@@ -1,23 +1,13 @@
-import log, { Logger } from 'console-log-level';
-import { promises as fs } from 'fs';
-import { ICLIOpts } from './cli';
-import { getFileHash } from './hash-generator';
+import { getFileHash, readHashMapFile, writeHashFile, IFileToHashMap } from './hash-generator';
+import { logger } from './logger';
 import { runCmd } from './spawn';
 
-interface IFileToHashMap {
-  [file: string]: string;
-}
 
-let logger: Logger;
-
-const writeHashFile = async (
-  fileToHashMap: IFileToHashMap,
-  hashFile: string
-) => {
-  logger.debug('Writing new checksum to file', fileToHashMap);
-  return fs.writeFile(hashFile, JSON.stringify(fileToHashMap));
-};
-
+/**
+ * Check if checksums for files match
+ * @param files - List of files to compute hash
+ * @param prevHashMap - Previous saved checksums
+ */
 const shouldRun = async (
   files: string[],
   prevHashMap: IFileToHashMap
@@ -46,16 +36,21 @@ const shouldRun = async (
   return [needsRun, newHashMap];
 };
 
+/**
+ * Run command ONLY if dependencies have changed
+ * @param files - List of files to checksum
+ * @param prevHashMap - Previous hashMap of files
+ * @param cmd - Command to execute if checksums don't mach
+ */
 const runIfc = async (
   files: string[],
-  prevHashMap: IFileToHashMap,
+  hashMapFile: string,
   cmd: string,
-  opts: ICLIOpts
 ) => {
-  logger = log({ level: opts.logLevel });
   logger.debug('Files to compute checksum for');
   logger.debug(files);
   logger.debug('Previous checksum');
+  const prevHashMap = await readHashMapFile(hashMapFile);
   logger.debug(prevHashMap);
   const [needsRun, newHashMap] = await shouldRun(files, prevHashMap);
   if (needsRun) {
@@ -63,7 +58,7 @@ const runIfc = async (
     runCmd(cmd)
       .then(async ret => {
         if (ret === 0) {
-          await writeHashFile(newHashMap, opts.hashMapFile);
+          await writeHashFile(newHashMap, hashMapFile);
         } else {
           logger.debug(`${cmd} returned ${ret}, not updating checksum file`);
         }
