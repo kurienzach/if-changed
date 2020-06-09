@@ -8,19 +8,19 @@
  *  - outputHashFilePath - ./ifc_hash
  */
 
-import { LogLevelNames } from "console-log-level";
-import glob from "glob";
-import minimist from "minimist";
-import { runIfc } from ".";
-import { parseConfigFile } from "./config-parser";
-import { readHashMapFile } from "./hash-generator";
+import { LogLevelNames } from 'console-log-level';
+import glob from 'glob';
+import minimist from 'minimist';
+import { runIfc } from '.';
+import { parseConfigFile } from './config-parser';
+import { readHashMapFile } from './hash-generator';
 
 /************************************************
  *              CONSTANTS & TYPES
  ************************************************/
 
-const DEFAULT_CONFIG_FILE = "./ifc.json";
-const DEFAULT_HASHMAP_FILE = "ifc_hash";
+const DEFAULT_CONFIG_FILE = './ifc.json';
+const DEFAULT_HASHMAP_FILE = 'ifc_hash';
 
 /**
  * CLI Args map interface
@@ -46,12 +46,11 @@ interface ICLIOpts {
  */
 const parseArgs = (): ICLIOpts => {
   const argv = minimist<ICLIArgs>(process.argv.slice(2));
-  console.log(argv);
 
   // Get config file if provided
   const configFilePath = argv.c || DEFAULT_CONFIG_FILE;
   const hashMapFile = argv.o || DEFAULT_HASHMAP_FILE;
-  const logLevel = argv.v || "error";
+  const logLevel = argv.v || 'info';
   const cmd = argv._.join(' ');
 
   return {

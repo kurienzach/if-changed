@@ -16,7 +16,9 @@ async function getFileHash(filePath: string) {
 async function readHashMapFile(hashMapFile: string) {
   let hashMap: IFileToHashMap;
   try {
-    hashMap =  JSON.parse(await fs.readFile(hashMapFile, 'utf8')) as IFileToHashMap;
+    hashMap = JSON.parse(
+      await fs.readFile(hashMapFile, 'utf8')
+    ) as IFileToHashMap;
   } catch {
     hashMap = {};
   }

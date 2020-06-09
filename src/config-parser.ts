@@ -17,13 +17,11 @@ const parseConfigFile = async (configFilePath?: string): Promise<IConfig> => {
   let config: object;
   try {
     config = JSON.parse(await fs.readFile(configFile, 'utf8'));
-  } catch(e) {
+  } catch (e) {
     config = defaultConfig;
   }
 
   return config as IConfig;
-}
-
-export {
-  parseConfigFile,
 };
+
+export { parseConfigFile };

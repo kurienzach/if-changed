@@ -1,8 +1,8 @@
-import log, { Logger } from "console-log-level";
-import { promises as fs } from "fs";
-import { ICLIOpts } from "./cli";
-import { getFileHash } from "./hash-generator";
-import { runCmd } from "./spawn";
+import log, { Logger } from 'console-log-level';
+import { promises as fs } from 'fs';
+import { ICLIOpts } from './cli';
+import { getFileHash } from './hash-generator';
+import { runCmd } from './spawn';
 
 interface IFileToHashMap {
   [file: string]: string;
@@ -14,7 +14,7 @@ const writeHashFile = async (
   fileToHashMap: IFileToHashMap,
   hashFile: string
 ) => {
-  logger.debug("Writing to file", fileToHashMap);
+  logger.debug('Writing new checksum to file', fileToHashMap);
   return fs.writeFile(hashFile, JSON.stringify(fileToHashMap));
 };
 
@@ -37,7 +37,7 @@ const shouldRun = async (
   }
 
   return files.some((file): boolean | void => {
-    console.log(file, prevHashMap[file], newHashMap[file]);
+    logger.debug(`Comparing hash map for ${file}, Old: ${prevHashMap[file]} New: ${newHashMap[file]}`);
     if (prevHashMap[file] !== newHashMap[file]) {
       return true;
     }
@@ -52,11 +52,16 @@ const runIfc = async (
   opts: ICLIOpts
 ) => {
   logger = log({ level: opts.logLevel });
-  logger.debug(files, prevHashMap, cmd, opts);
+  logger.debug('Files to compute checksum for')
+  logger.debug(files));
+  logger.debug('Previous checksum')
+  logger.debug(prevHashMap);
   const needsRun = await shouldRun(files, prevHashMap, opts);
-  logger.debug(needsRun);
   if (needsRun) {
+    logger.info(`Checksums do not match, running cmd '${cmd}'`);
     runCmd(cmd);
+  } else {
+    logger.info(`Checksums match, not running cmd '${cmd}'`);
   }
 };
 
