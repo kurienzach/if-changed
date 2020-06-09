@@ -20,9 +20,8 @@ const writeHashFile = async (
 
 const shouldRun = async (
   files: string[],
-  prevHashMap: IFileToHashMap,
-  opts: ICLIOpts
-): Promise<boolean> => {
+  prevHashMap: IFileToHashMap
+): Promise<[boolean, IFileToHashMap]> => {
   const newHashMap = (await Promise.all(files.map(getFileHash))).reduce<
     IFileToHashMap
   >((map, hash, index) => {
@@ -30,13 +29,11 @@ const shouldRun = async (
     return map;
   }, {});
 
-  await writeHashFile(newHashMap, opts.hashMapFile);
-
   if (files.length !== Object.values(prevHashMap).length) {
-    return true;
+    return [true, newHashMap];
   }
 
-  return files.some((file): boolean | void => {
+  const needsRun = files.some((file): boolean | void => {
     logger.debug(
       `Comparing hash map for ${file}, Old: ${prevHashMap[file]} New: ${newHashMap[file]}`
     );
@@ -45,6 +42,8 @@ const shouldRun = async (
     }
     return false;
   });
+
+  return [needsRun, newHashMap];
 };
 
 const runIfc = async (
@@ -58,10 +57,20 @@ const runIfc = async (
   logger.debug(files);
   logger.debug('Previous checksum');
   logger.debug(prevHashMap);
-  const needsRun = await shouldRun(files, prevHashMap, opts);
+  const [needsRun, newHashMap] = await shouldRun(files, prevHashMap);
   if (needsRun) {
     logger.info(`Checksums do not match, running cmd '${cmd}'`);
-    runCmd(cmd);
+    runCmd(cmd)
+      .then(async ret => {
+        if (ret === 0) {
+          await writeHashFile(newHashMap, opts.hashMapFile);
+        } else {
+          logger.debug(`${cmd} returned ${ret}, not updating checksum file`);
+        }
+      })
+      .catch(() => {
+        logger.debug(`${cmd} failed, not updating checksum file`);
+      });
   } else {
     logger.info(`Checksums match, not running cmd '${cmd}'`);
   }

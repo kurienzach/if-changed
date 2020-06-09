@@ -24,23 +24,27 @@ function run(command: string, opts?: object) {
 }
 
 function runCmd(command: string, opts?: object) {
-  const proc = run(command, opts);
+  return new Promise((resolve, reject) => {
+    const proc = run(command, opts);
 
-  proc.stdout.on('data', data => {
-    getLines(data).forEach(line => {
-      console.log(line);
+    proc.stdout.on('data', data => {
+      getLines(data).forEach(line => {
+        console.log(line);
+      });
     });
-  });
-  proc.stderr.on('data', data => {
-    getLines(data).forEach(line => {
-      process.stderr.write(`${line}\n`);
+    proc.stderr.on('data', data => {
+      getLines(data).forEach(line => {
+        process.stderr.write(`${line}\n`);
+      });
     });
-  });
-  proc.on('error', err => {
-    console.error(err);
-  });
-  proc.on('exit', () => {
-    // console.log('Successfully completed');
+    proc.on('error', err => {
+      console.error(err);
+      reject(err);
+    });
+    proc.on('close', code => {
+      // console.log('Successfully completed');
+      resolve(code);
+    });
   });
 }
 
