@@ -4,8 +4,8 @@
  * at https://github.com/joliss/fast-js-hash-benchmark
  */
 
+import { createHash } from 'crypto';
 import { promises as fs } from 'fs';
-import { murmurHash } from 'murmurhash-native';
 import { logger } from './logger';
 
 /**
@@ -17,7 +17,9 @@ interface IFileToHashMap {
 
 async function getFileHash(filePath: string) {
   const data = await fs.readFile(filePath);
-  return murmurHash(data).toString();
+  return createHash('md5')
+    .update(data)
+    .digest('hex');
 }
 
 async function readHashMapFile(hashMapFile: string) {

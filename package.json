@@ -1,6 +1,6 @@
 {
   "name": "@kurienzach/if-changed",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "if-changed",
   "license": "MIT",
   "repository": "",
@@ -31,8 +31,7 @@
   "dependencies": {
     "console-log-level": "^1.4.1",
     "glob": "^7.1.6",
-    "minimist": "^1.2.5",
-    "murmurhash-native": "^3.5.0"
+    "minimist": "^1.2.5"
   },
   "devDependencies": {
     "@types/console-log-level": "^1.4.0",
