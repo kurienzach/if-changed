@@ -18,7 +18,6 @@ import { env } from './env';
 
 (async () => {
   const config = await parseConfigFile(env.configFilePath);
-  console.log(config.files);
   const files = (
     await Promise.all(
       config.files.map(
